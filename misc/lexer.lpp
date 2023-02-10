@@ -1,0 +1,73 @@
+%option noyywrap
+
+%{
+
+#include <iostream>
+#include <stdio.h>
+
+#define YY_DECL int yylex()
+
+#include "parser.tab.hpp"
+
+%}
+
+%%
+
+[ \t];
+\s;
+"+" {/*printf("PLUS \n");*/ return PLUS;}
+#[\s]*.+ {/*printf("COMMENT \n");*/ return COMMENT;}
+, {/*printf("COMMA \n");*/ return COMMA;}
+.global {/*printf("GLOBAL \n");*/ return GLOBAL;}
+.extern {/*printf("EXTERN \n");*/ return EXTERN;}
+.section {/*printf("SECTION \n");*/ return SECTION;}
+.skip {/*printf("SKIP \n");*/ return SKIP;}
+.word {/*printf("WORD \n");*/ return WORD;}
+.end {/*printf("END \n");*/ return END;}
+halt {/*printf("HALT \n");*/ return HALT;}
+int {/*printf("INT \n");*/ return INT;}
+iret {/*printf("IRET \n");*/ return IRET;}
+call {/*printf("CALL \n");*/ return CALL;}
+ret {/*printf("RET \n");*/ return RET;}
+jmp {/*printf("JMP \n");*/ return JMP;}
+jeq {/*printf("JEQ \n");*/ return JEQ;}
+jne {/*printf("JNE \n");*/ return JNE;}
+jgt {/*printf("JGT \n");*/ return JGT;}
+push {/*printf("PUSH \n");*/ return PUSH;}
+pop {/*printf("POP \n");*/ return POP;}
+xchg {/*printf("XCHG \n");*/ return XCHG;}
+add {/*printf("ADD \n");*/ return ADD;}
+sub {/*printf("SUB \n");*/ return SUB;}
+mul {/*printf("MUL \n");*/ return MUL;}
+div {/*printf("DIV \n");*/ return DIV;}
+cmp {/*printf("CMP \n");*/ return CMP;}
+not {/*printf("NOT \n");*/ return NOT;}
+and {/*printf("AND \n");*/ return AND;}
+or {/*printf("OR \n");*/ return OR;}
+xor {/*printf("XOR \n");*/ return XOR;}
+test {/*printf("TEST \n");*/ return TEST;}
+shl {/*printf("SHL \n");*/ return SHL;}
+shr {/*printf("SHR \n");*/ return SHR;}
+ldr {/*printf("LDR \n");*/ return LDR;}
+str {/*printf("STR \n");*/ return STR;}
+r0 {/*printf("R0 \n");*/ return R0;}
+r1 {/*printf("R1 \n");*/ return R1;}
+r2 {/*printf("R2 \n");*/ return R2;}
+r3 {/*printf("R3 \n");*/ return R3;}
+r4 {/*printf("R4 \n");*/ return R4;}
+r5 {/*printf("R5 \n");*/ return R5;}
+r6|sp {/*printf("SP \n");*/ return SP;}
+r7|pc {/*printf("PC \n");*/ return PC;}
+psw {/*printf("PSW \n");*/ return PSW;}
+0x[0-9ABCDEF]+ {yylval.sval = yytext;/*printf("HEX_LITERAL \n");*/ return HEX_LITERAL;}
+[0-9]+ {yylval.ival = atoi(yytext); /*printf("DEC_LITERAL \n");*/ return DEC_LITERAL;}
+"$" {/*printf("IMMED \n");*/ return IMMED;}
+"%" {/*printf("PC_REL \n");*/ return PC_REL;}
+"*" {/*printf("MEM_VALUE \n");*/ return MEM_VALUE;}
+"[" {/*printf("OPEN_BRACKET \n");*/ return OPEN_BRACKET;}
+"]" {yylval.sval = yytext;/*printf("CLOSE_BRACKET \n");*/ return CLOSE_BRACKET;}
+\n {/*printf("NEW LINE \n");*/ return NEW_LINE;}
+[a-zA-Z_0-9]+ {yylval.sval = yytext;/*printf("SYMBOL \n");*/ return SYMBOL;}
+[a-zA-Z_][a-zA-Z_0-9]*: {yylval.sval = yytext;/*printf("LABEL \n");*/ return LABEL;}
+
+%%
